@@ -26,6 +26,6 @@ func main() {
 }
 
 func Func1(ctx *cli.Context) error {
-	fmt.Printf("Function: Func1, UIN: %s, OperatorID: %s\n", ctx.Args().Get('u'), ctx.Args().Get('p'))
+	fmt.Printf("Function: Func1, UIN: %s, OperatorID: %s\n", ctx.String("u"), ctx.String("p"))
 	return nil
 }
