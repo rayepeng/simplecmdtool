@@ -2,7 +2,6 @@ package tools
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 
 	"github.com/urfave/cli/v2"
@@ -70,7 +69,7 @@ func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 	return flags, nil
 }
 
-func (t *Tool) Run() error {
+func (t *Tool) Run(args []string) error {
 
 	for _, config := range t.functionConfigs {
 		flags, err := parseFlags(config.OptionFlags, config.Description)
@@ -87,5 +86,5 @@ func (t *Tool) Run() error {
 
 	}
 
-	return t.app.Run(os.Args)
+	return t.app.Run(args)
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/rayepeng/simplecmdtool/tools"
 	"github.com/urfave/cli/v2"
@@ -18,7 +19,7 @@ func main() {
 	}
 	tool.AddFunction(func1Config)
 
-	err := tool.Run()
+	err := tool.Run(os.Args)
 	if err != nil {
 		fmt.Println(err)
 	}
