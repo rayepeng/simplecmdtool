@@ -18,18 +18,23 @@ type FunctionConfig struct {
 
 type Tool struct {
 	app             *cli.App
-	functionConfigs []*FunctionConfig
+	functionConfigs map[string]*FunctionConfig
 }
 
-func NewTool() *Tool {
-	return &Tool{
-		app: cli.NewApp(),
+func NewTool(functionconfigs []*FunctionConfig) *Tool {
+	tool := &Tool{
+		app:             cli.NewApp(),
+		functionConfigs: make(map[string]*FunctionConfig),
 	}
+	for _, config := range functionconfigs {
+		tool.functionConfigs[config.Name] = config
+	}
+	return tool
 }
 
-func (t *Tool) AddFunction(config *FunctionConfig) {
-	t.functionConfigs = append(t.functionConfigs, config)
-}
+// func (t *Tool) AddFunction(config *FunctionConfig) {
+// 	t.functionConfigs = append(t.functionConfigs, config)
+// }
 
 func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 	flags := []cli.Flag{}

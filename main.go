@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -11,22 +10,20 @@ import (
 )
 
 func main() {
-	tool := tools.NewTool()
-
-	func1Config := &tools.FunctionConfig{
-		Name:        "Func1",
-		Function:    Func1,
-		OptionFlags: "u:p:",
-		Description: "-u <uin> -p <operator_id>",
-	}
-	reverseFileLinesConfig := &tools.FunctionConfig{
-		Name:        "ReverseFileLines",
-		Function:    ReverseFileLines,
-		OptionFlags: "f:",
-		Description: "-f <file_path>",
-	}
-	tool.AddFunction(func1Config)
-	tool.AddFunction(reverseFileLinesConfig)
+	tool := tools.NewTool([]*tools.FunctionConfig{
+		{
+			Name:        "Func1",
+			Function:    Func1,
+			OptionFlags: "u:p:",
+			Description: "-u <uin> -p <operator_id>",
+		},
+		{
+			Name:        "ReverseFileLines",
+			Function:    ReverseFileLines,
+			OptionFlags: "f:",
+			Description: "-f <file_path>",
+		},
+	})
 	err := tool.Run(os.Args)
 	if err != nil {
 		fmt.Println(err)
@@ -41,7 +38,7 @@ func Func1(ctx *cli.Context) error {
 func ReverseFileLines(ctx *cli.Context) error {
 	filePath := ctx.String("f")
 
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return fmt.Errorf("failed to read file: %v", err)
 	}
