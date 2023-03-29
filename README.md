@@ -9,25 +9,18 @@
 
 比如我要写一个读文件的函数，做一些操作，比如逆序输出每一行
 
-那么只需要
+那么只需要将函数添加到tools即可，自动添加到命令行中
 
 ```go
 func ReverseFileLines(ctx *cli.Context) error {
 	filePath := ctx.String("f")
 
 	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return fmt.Errorf("failed to read file: %v", err)
-	}
-
-	lines := strings.Split(string(data), "\n")
-	for i := len(lines) - 1; i >= 0; i-- {
-		fmt.Println(lines[i])
-	}
-
+	//...
 	return nil
 }
 
+// 添加函数
 tool := tools.NewTool([]*tools.FunctionConfig{
     {
         Name:        "ReverseFileLines",
@@ -36,7 +29,28 @@ tool := tools.NewTool([]*tools.FunctionConfig{
         Description: "-f <file_path>",
     },
 })
-tool.Run(os.Args) 
+err := tool.Run(os.Args) 
+if err != nil{
+	//....
+}
 ```
 
-即可
+命令行输出：
+
+```bash
+❯ go run main.go ReverseFileLines -h
+NAME:
+   main ReverseFileLines
+
+USAGE:
+   main ReverseFileLines [command options] [arguments...]
+
+OPTIONS:
+   -f value, --file_path value  -f <file_path>
+   --help, -h                   show help
+```
+
+## 特性
+
+- [ ] 自动解析选项，选项别名
+- [ ] 文档

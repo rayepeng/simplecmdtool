@@ -32,10 +32,6 @@ func NewTool(functionconfigs []*FunctionConfig) *Tool {
 	return tool
 }
 
-// func (t *Tool) AddFunction(config *FunctionConfig) {
-// 	t.functionConfigs = append(t.functionConfigs, config)
-// }
-
 func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 	flags := []cli.Flag{}
 
@@ -44,7 +40,7 @@ func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 	flagPairs := flagRegex.FindAllString(flagString, -1)
 
 	// 使用正则表达式从 Description 中提取选项的使用说明
-	usageRegex := regexp.MustCompile(`-(\w) <.*?>`)
+	usageRegex := regexp.MustCompile(`-(\w) <(.*?)>`)
 	usageMatches := usageRegex.FindAllStringSubmatch(description, -1)
 
 	if len(flagPairs) != len(usageMatches) {
@@ -52,8 +48,10 @@ func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 	}
 
 	usageMap := make(map[string]string)
+	aliasMap := make(map[string]string)
 	for _, match := range usageMatches {
 		usageMap[match[1]] = match[0]
+		aliasMap[match[1]] = match[2]
 	}
 
 	for _, pair := range flagPairs {
@@ -62,10 +60,14 @@ func parseFlags(flagString string, description string) ([]cli.Flag, error) {
 		if !ok {
 			return nil, fmt.Errorf("flag %s not found in description", flagName)
 		}
-
+		alias, ok := aliasMap[flagName]
+		if !ok {
+			return nil, fmt.Errorf("flag %s not found in description", flagName)
+		}
 		flag := &cli.StringFlag{
-			Name:  flagName,
-			Usage: usage,
+			Name:    flagName,
+			Usage:   usage,
+			Aliases: []string{alias},
 		}
 
 		flags = append(flags, flag)

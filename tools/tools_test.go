@@ -22,7 +22,6 @@ func Func1(ctx *cli.Context) error {
 }
 
 func TestToolRunWithFunc1(t *testing.T) {
-	tool := tools.NewTool()
 
 	func1Config := &tools.FunctionConfig{
 		Name:        "Func1",
@@ -30,9 +29,7 @@ func TestToolRunWithFunc1(t *testing.T) {
 		OptionFlags: "u:p:",
 		Description: "-u <uin> -p <operator_id>",
 	}
-
-	tool.AddFunction(func1Config)
-
+	tool := tools.NewTool([]*tools.FunctionConfig{func1Config})
 	// Prepare the arguments for the app to run with.
 	args := []string{"appName", "Func1", "-u", "123", "-p", "456"}
 
